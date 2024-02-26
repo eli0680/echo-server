@@ -1,0 +1,35 @@
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+public class ServerListener implements Runnable
+{
+    private ObjectInputStream is;
+    private ObjectOutputStream os;
+
+    public ServerListener(ObjectInputStream is, ObjectOutputStream os)
+    {
+        this.is = is;
+        this.os = os;
+    }
+
+    @Override
+    public void run()
+    {
+        while(true)
+        {
+            try {
+                //reads text from the client
+                String text = (String) is.readObject();
+                //write the text back to the client
+                os.writeObject(text);
+                os.reset();
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+                System.out.println("Client Disconnected");
+                break;
+            }
+        }
+    }
+
+}
